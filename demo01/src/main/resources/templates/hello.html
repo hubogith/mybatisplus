@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style type="text/css">
+    .odd{
+        background-color: beige;
+    }
+</style>
+<body>
+<div th:text="${mess}"></div>
+
+<!--session取值-->
+<div th:text="*{session.stu.id}"
+     th:style="'width:'+@{${count}/${count1}*100}+'%;height:30px;border: 1px solid red;background-color: red'">
+
+</div>
+
+<!--页面上循环取集合的值-->
+<table>
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>姓名</th>
+            <th>时间</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr th:each="s,stuState:${list}" th:class="${stuState.odd}?'odd'">
+        <td th:text="${stuState.count}"></td>
+        <td th:text="${s.name}"></td>
+        <td th:text="${#dates.format(s.date,'yyyy-MM-dd')}"></td>
+        <td>
+            <span th:utext="${url}"></span>
+            <span th:utext="${url1}"></span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div>
+    <img th:src="@{${img}}" alt="无法加载"/>
+
+    <a th:href="@{'/h'(sid=2)}">发送</a>
+</div>
+<div>
+<!--带回显的下拉框-->
+    <select id="ses" th:field="*{obj.id}">
+        <option value="0">-请选择-</option>
+        <option th:each="stu:${list}" th:value="${stu.id}" th:text="${stu.name}">长沙</option>
+    </select>
+</div>
+
+<div>
+    <form action="/demo01/hee" method="post">
+        <input name="names" value="张三">
+        <input name="names" value="李四">
+        <input type="submit" value="提交">
+    </form>
+</div>
+
+<div>
+    <form action="login6.action" method="post">
+        编号1：<input name="cid"/><br/>
+        姓名：<input name="cname"/><br/>
+        生日：<input name="borndate"/><br/>
+        生日：<input name="borndate"/><br/>
+        操作：<input type="submit"/><br/>
+    </form>
+</div>
+</body>
+</html>
