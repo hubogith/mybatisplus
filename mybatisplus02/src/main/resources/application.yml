@@ -1,0 +1,25 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /demo
+spring:
+  application:
+    name: boot-mybatis-plus
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/clouddb?useUnicode=true&serverTimezone=UTC&characterEncoding=utf8
+    username: root
+    password: 327429
+
+mybatis-plus:
+  type-aliases-package: com.cssl.pojo
+  db-config:
+    id-type: auto
+    field-strategy: not_empty
+    column-underline: false
+    logic-delete-value: 0
+    logic-not-delete-value: 1
+    refresh: true
+  mapper-locations: classpath:/mapper/**.xml
+  configuration:
+    auto-mapping-behavior: full
