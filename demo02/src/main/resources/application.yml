@@ -1,0 +1,38 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /boot
+
+spring:
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: utf-8
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/templates/,classpath:/META-NF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,classpath:/upload/
+  #数据源
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/clouddb?serverTimezone=GMT
+    username: root
+    password: 327429
+  #jackson
+  jackson:
+    date-format: yyyy-MM-dd HH:mm
+    time-zone: GMT+8
+
+mybatis:
+  #config-location: mybatis-config.xml 如果保留了这个配置文件可以这样配置
+  type-aliases-package: com.hb.pojo
+  configuration:
+    auto-mapping-behavior: full
+    use-generated-keys: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#分页合理化配置
+pagehelper:
+  reasonable: true
+  page-size-zero: true
+  pageSizeZero: true
