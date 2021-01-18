@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hb.mapper.SubMapper">
+
+    <insert id="addSub" parameterType="sub">
+        insert into sub(sub_title,sub_type) values (#{sub.subTitle},#{sub.subType})
+    </insert>
+    <select id="bySubId" resultType="int">
+            SELECT MAX(`sub_id`) FROM `sub`
+    </select>
+    <select id="bySubTitle" resultType="sub">
+        select * from sub
+        where sub_title=#{title}
+    </select>
+    <update id="updateByType" parameterType="sub">
+        update sub set
+        sub_type=#{sub.subType}
+        where sub_id=#{sub.subId}
+    </update>
+    <delete id="delSubId">
+        delete from sub
+        where sub_id=#{subId}
+    </delete>
+</mapper>

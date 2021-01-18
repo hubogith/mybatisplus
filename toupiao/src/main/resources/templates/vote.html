@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <META content="IE=11.0000"
+          http-equiv="X-UA-Compatible">
+
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <TITLE>参与投票</TITLE>
+    <LINK href="css/style.css" rel="stylesheet" type="text/css">
+    <META name="GENERATOR" content="MSHTML 11.00.10586.420">
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+</HEAD>
+<BODY>
+<DIV class="wrap" id="header"><IMG src="images/logo.gif"></DIV>
+<DIV class="wrap" id="navbar">
+    <DIV class="profile" >
+        <span th:text="'您好,'+${session.user.userName}" th:remove="tag">title</span>
+        <SPAN class="return"><A th:href="@{'/show'(pageIndex=1)}">返回列表</A></SPAN>
+        <SPAN class="addnew"><A th:if="${session.user.userStatus eq 1}" th:href="@{'/add.html'}">添加新投票</A></SPAN>
+        <SPAN class="addnew"><A th:if="${session.user.userStatus ne 1}" href="#">添加新投票</A></SPAN>
+        <SPAN class="modify"><A th:if="${session.user.userStatus eq 1}" th:href="@{'/add.html'}">维护</A></SPAN>
+        <SPAN class="modify"><A th:if="${session.user.userStatus ne 1}" href="#">维护</A></SPAN>
+        <SPAN class="return"><A th:href="@{'/login.html'}">注销</A></SPAN>
+    </DIV>
+    <DIV class="search">
+        <FORM action="/toupiao/show" method="post">
+            <INPUT name="title" class="input-text" type="text"  >
+            <INPUT class="input-button" type="submit"/>
+        </FORM>
+    </DIV>
+</DIV>
+<DIV class="wrap" id="vote">
+    <H2>参与投票</H2>
+    <UL class="list">
+        <LI>
+            <H4 th:text="${title}">就业意向城市</H4>
+            <P class="info" th:text="'共有'+${xuan}+'个选项,已有'+${total}+'个投票。'">共有 4 个选项，已有 9 个投票。</P>
+
+            <FORM action="/toupiao/vote" method="post">
+                <INPUT name="subId" type="hidden" th:value="${subId}">
+                <INPUT name="userId" type="hidden" th:value="${session.user.userId}">
+                <input name="title" type="hidden" th:value="${title}">
+                <input name="xuan" type="hidden" th:value="${xuan}">
+                <input name="total" type="hidden" th:value="${total}">
+                <OL>
+                    <LI th:each="map:${list}">
+                        <INPUT name="options" th:value="${map.oid}" th:text="${map.ocon}" th:if="${map.stype} eq 1"
+                               th:attr="type='radio'"  type="hidden" class="xuan">
+                        <INPUT name="options" th:value="${map.oid}" th:text="${map.ocon}" th:if="${map.stype} eq 2"
+                               th:attr="type='checkbox'"  type="hidden" class="xuan">
+                    </LI>
+                </OL>
+                <P class="voteView">
+                    <INPUT type="image" src="images/button_vote.gif" id="ti"/>
+                    <A th:href="@{'/xiang'(subId=${subId},title=${title},xuan=${xuan},total=${total})}">
+                        <IMG src="images/button_view.gif"/>
+                    </A>
+                </P>
+                <ul class="error">
+                   <li>
+                       <span id="er"></span>
+                   </li>
+                </ul>
+            </FORM>
+        </LI>
+    </UL>
+</DIV>
+<DIV class="wrap" id="footer"> 北大青鸟 © 版权所有</DIV>
+</BODY>
+<script type="text/javascript">
+    $(function () {
+        $("#ti").click(function () {
+            //取单选框的值
+            var val=$('input:radio[name="options"]:checked').val();
+
+            //取 单选复选框是否选中
+            var isChecked=$(".xuan").prop('checked');
+
+            var chk_value =[];//定义一个数组
+            $('input[name="options"]:checked').each(function(){
+                chk_value.push($(this).val());//将选中的值添加到数组chk_value中
+            });
+
+            if(val==null && isChecked==false && chk_value.length==0){
+                $("#er").text("你还没有选择投票项");
+                return false;
+            }
+            else{
+
+
+                return true;
+            }
+        });
+    })
+</script>
+</HTML>

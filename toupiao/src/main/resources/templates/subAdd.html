@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title></title>
+    <link type="text/css" rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+
+<div id="header" class="wrap">
+    <img src="images/logo.gif">
+</div>
+<div id="navbar" class="wrap">
+    <DIV class="profile" >
+        <span th:text="'您好,'+${session.user.userName}" th:remove="tag">title</span>
+        <SPAN class="return"><A th:href="@{'/show'(pageIndex=1)}">返回列表</A></SPAN>
+        <SPAN class="addnew"><A th:if="${session.user.userStatus eq 1}" th:href="@{'/add.html'}">添加新投票</A></SPAN>
+        <SPAN class="addnew"><A th:if="${session.user.userStatus ne 1}" href="#">添加新投票</A></SPAN>
+        <SPAN class="modify"><A th:if="${session.user.userStatus eq 1}" th:href="@{'/add.html'}">维护</A></SPAN>
+        <SPAN class="modify"><A th:if="${session.user.userStatus ne 1}" href="#">维护</A></SPAN>
+        <SPAN class="return"><A th:href="@{'/login.html'}">注销</A></SPAN>
+    </DIV>
+    <div class="search">
+        <FORM action="/toupiao/show" method="post">
+            <INPUT name="title" class="input-text" type="text"  >
+            <INPUT class="input-button" type="submit"/>
+        </FORM>
+    </div>
+</div>
+
+<div id="message" class="box">
+    <h2>提示信息</h2>
+    <div class="content">
+        <p>恭喜：操作成功！<br><a href="http://localhost:8080/toupiao/show">返回查看投票列表</a></p>
+    </div>
+</div>
+<div id="footer" class="wrap">
+    北大青鸟 © 版权所有
+</div>
+
+
+</body>
+</html>

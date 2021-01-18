@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hb.mapper.OptionMapper">
+    <insert id="optionAdd">
+        insert into `option`(`sub_id`,`option_concat`,`option_order`) values
+        <foreach collection="options" item="option" separator="," index="index">
+            (#{option.subId},#{option.optionConcat},#{option.optionOrder})
+        </foreach>
+    </insert>
+
+<!--批量删除
+DELETE FROM `products`
+WHERE	pid IN (12,17);
+
+-->
+    <delete id="deleteOid">
+        delete from `option`
+        where option_id in
+        <foreach collection="list0" item="list" open="(" close=")" separator="," index="index">
+            #{list}
+        </foreach>
+    </delete>
+
+    <update id="updateOid">
+        <foreach collection="options" item="option" separator=";" index="index">
+            update `option`
+            <set>
+                option_concat=#{option.optionConcat}
+            </set>
+            where option_id=#{option.optionId}
+        </foreach>
+    </update>
+    <delete id="delSubId">
+        delete from `option`
+        where sub_id=#{subId}
+    </delete>
+</mapper>

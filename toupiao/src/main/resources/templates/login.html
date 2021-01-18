@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<HTML xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <META content="IE=11.0000" http-equiv="X-UA-Compatible">
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <TITLE></TITLE>
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+    <LINK href="css/style.css" rel="stylesheet" type="text/css">
+    <META name="GENERATOR" content="MSHTML 11.00.10586.420">
+</HEAD>
+<BODY>
+<DIV class="wrap" id="header"><IMG src="images/logo.gif"></DIV>
+<DIV class="wrap" id="login">
+    <DIV class="main">
+        <DIV class="corner"></DIV>
+        <DIV class="introduce">
+            <H2>北大青鸟</H2>
+            <P>网上调查系统...</P></DIV>
+        <DIV class="login">
+            <H2>用户登录</H2>
+            <FORM action="/User-login.action" method="post" id="form">
+                <DL id="loginBox">
+                    <DT>用户名：</DT>
+                    <DD><INPUT name="userName" class="input-text" type="text" id="name"></span>
+                    </DD>
+                    <DT>密　码：</DT>
+                    <DD><INPUT name="userPwd" class="input-text" type="password" id="pwd"></span>
+                    </DD>
+                    <DT></DT>
+                    <DD><INPUT name="submit" class="input-button" type="button" value="登录" id="log">
+                        <A href="http://localhost:8080/toupiao/regist.html">新用户注册</A></DD>
+                </DL>
+            </FORM>
+            <DIV class="error"><span id="mess"></span></DIV>
+        </DIV>
+    </DIV>
+</DIV>
+<DIV class="wrap"></DIV>
+<DIV class="wrap" id="footer"> 北大青鸟 © 版权所有</DIV>
+<script type="text/javascript">
+    $(function () {
+        $("#log").click(function () {
+            let name = $("#name").val();
+            let pwd = $("#pwd").val();
+            if (name != "" && pwd != "") {
+                $.post("/toupiao/login", {"userName": name, "userPwd": pwd}, function (date) {
+                    if (date == 'ok') {
+                        window.location.href = "http://192.168.70.128:8080/toupiao/show";
+                    } else {
+                        $("#mess").text("用户名密码有误");
+                    }
+                });
+            }else {
+                $("#mess").text("用户名密码有误");
+            }
+
+        });
+
+    });
+</script>
+</BODY>
+</HTML>

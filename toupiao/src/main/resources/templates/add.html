@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <META content="IE=11.0000" http-equiv="X-UA-Compatible">
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <TITLE>投票列表</TITLE>
+    <LINK href="css/style.css" rel="stylesheet" type="text/css">
+    <META name="GENERATOR" content="MSHTML 11.00.10586.420">
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+</HEAD>
+<BODY>
+<DIV class="wrap" id="header"><IMG src="images/logo.gif"></DIV>
+<DIV class="wrap" id="navbar">
+    <DIV class="profile"  th:text="'您好,'+${session.user.userName}">title
+        <SPAN class="return"><A href="http://localhost:8080/toupiao/show">返回列表</A></SPAN>
+        <SPAN class="addnew"><A href="#">添加新投票</A></SPAN>
+        <SPAN class="modify"><A href="http://localhost:8080/toupiao/show">维护</A></SPAN>
+        <SPAN class="return"><A href="http://localhost:8080/toupiao/login.html">注销</A></SPAN>
+    </DIV>
+    <DIV class="search">
+        <FORM action="/toupiao/show" method="post">
+            <INPUT name="title" class="input-text" type="text" >
+            <INPUT class="input-button" type="submit"/>
+        </FORM>
+    </DIV>
+</DIV>
+<DIV class="box" id="voteManage">
+    <H2>添加新投票</H2>
+    <DIV class="content">
+        <FORM onsubmit="return check();" th:action="${maps==null}?'/toupiao/add':'/toupiao/update?subId='+${subId}" method="post">
+            <DL>
+                <DT>投票内容：</DT>
+                <DD><INPUT name="struts.token.name" type="hidden" value="token">
+                    <INPUT name="token" type="hidden" value="B1XPKLEQ7DQ6DNVWKBARPOY4HLYYXDE6">
+                    <INPUT name="title" class="input-text" id="title" type="text"  th:value="${title!=null}? ${title}:''" th:readonly="${maps!=null}">
+                </DD>
+                <DT>投票类型：</DT>
+                <DD>
+                    <INPUT name="stype" type="radio" value="1" th:checked="${sType!=null and sType==1}?true:false">单选
+                    <INPUT name="stype" type="radio" value="2" th:checked="${sType!=null and sType==2}?true:false">多选
+                </DD>
+                <DT>投票选项：</DT>
+
+                <dd id="voteoptions" th:if="${maps != null}">
+                    <div th:each="s, state : ${maps}">
+                        <p>
+                            <input  th:value="${s.ocon}" type="text" class="input-text" name="options" />
+                            <input th:value="${s.oid}" type="text" hidden name="oids">
+                            <a th:if="${state.index > 1}" class="del" href="javascript:;" onclick="DelOption()">删除</a>
+                        </p>
+                    </div>
+                </dd>
+                <DT></DT>
+                <DD class="button"><INPUT type="image" src="images/button_submit.gif">
+                    <A onclick="AddOption()" href="javascript:;">增加选项</A> <A
+                            href="http://localhost:8080/myVote/Subject-list.action">取消操作</A>
+                </DD>
+            </DL>
+        </FORM>
+    </DIV>
+</DIV>
+<DIV class="wrap" id="footer"> 北大青鸟 © 版权所有</DIV>
+</BODY>
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+
+    var isIE = !!document.all;
+    function AddOption()
+    {
+        let num=100;
+
+        var voteoptions = document.getElementById("voteoptions");
+        var _div = document.createElement("div");
+        var _p = document.createElement("p");
+        var _input = document.createElement("input");
+        var _input2 = document.createElement("input");
+
+        _input.type = "text";
+        _input.className = "input-text";
+        _input.setAttribute("name", "options");
+
+        _input2.type="hidden";
+        _input2.setAttribute("name", "oids");
+        _input2.setAttribute("value",num );
+
+        _p.appendChild(_input);
+        _p.appendChild(_input2);
+
+        var _a = document.createElement("a");
+        _a.className = "del";
+        _a.setAttribute("href", "javascript:;");
+        if(isIE) {
+            _a.attachEvent("onclick", DelOption);
+        } else {
+            _a.addEventListener("click", DelOption, false);
+        }
+        _a.appendChild(document.createTextNode("删除"));
+        _p.appendChild(_a);
+        _div.appendChild(_p);
+        voteoptions.appendChild(_div);
+    }
+    //删除选项
+    function DelOption(e)
+    {
+        if(!e) e = window.event;
+        var a = e.srcElement || e.target;
+        var obj = a.parentNode;
+        obj.parentNode.removeChild(obj);
+    }
+    //非空验证
+    function check(){
+        var title = document.getElementById('title').value;
+        var options = document.getElementsByName('options');
+        if(title==''){
+            alert('投票内容不能为空');
+            return false;
+        }
+
+        let arr=new Array();
+
+        //新增选项不能为空
+        for(let index = 0; index < options.length; index++){
+
+            arr[index]=options[index].value;
+            if(options[index].value==''){
+
+                alert('选项内容不能为空');
+                return false;
+            }
+        }
+
+        for(let i = 0; i < options.length; i++) {
+            console.info(arr[i]);
+            if(arr[i]==arr[i+1]) {
+                alert("投票选项不能重复");
+                return false;
+            }
+        }
+
+        //原来要修改的选项也不能为空
+        var flag = true;
+        $('#voteoptions :input').each(function(){
+            //alert(this.value);
+            if(this.value==''){
+                flag = false;
+            }
+        });
+        if(!flag){
+            alert('选项内容不能为空');
+        }
+        return flag;
+    }
+
+</script>
+</html>

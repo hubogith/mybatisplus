@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <META content="IE=11.0000" http-equiv="X-UA-Compatible">
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <TITLE>投票列表</TITLE>
+    <LINK href="css/style.css" rel="stylesheet" type="text/css">
+    <META name="GENERATOR" content="MSHTML 11.00.10586.420">
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+</HEAD>
+<style type="text/css">
+    .odd1{
+        background: #fffff0;
+    }
+</style>
+<BODY>
+<DIV class="wrap" id="header"><IMG src="images/logo.gif"></DIV>
+<DIV class="wrap" id="navbar">
+<!--    -->
+    <DIV class="profile" >
+        <span th:text="'您好,'+${session.user.userName}" th:remove="tag">title</span>
+        <SPAN class="return"><A th:href="@{'/show'(pageIndex=1)}">返回列表</A></SPAN>
+        <SPAN class="addnew"><A th:href="@{'/tianjia'(userStatus=${session.user.userStatus})}">添加新投票</A></SPAN>
+        <SPAN class="modify"><A th:href="@{'/weihu'(userStatus=${session.user.userStatus})}">维护</A></SPAN>
+        <SPAN class="return"><A th:href="@{'/login.html'}">注销</A></SPAN>
+    </DIV>
+    <DIV class="search">
+        <FORM action="/toupiao/show" method="post">
+            <INPUT name="title" class="input-text" type="text" th:value="${title}" >
+            <INPUT class="input-button" type="submit"/>
+        </FORM>
+    </DIV>
+</DIV>
+<DIV class="wrap" id="vote">
+    <H2>投票列表</H2>
+    <DIV style="float: right;">
+
+        <A th:href="@{'/show'(title=${title},pageIndex=1)}">首页 |</A>
+        <a th:href="@{'/show'(title=${title},pageIndex=${page.getPageNum()-1<=1?1:page.getPageNum()-1})}">上一页 |</a>
+        <a th:href="@{'/show'(title=${title},pageIndex=${page.getPageNum()+1>=page.getPages()?page.getPages():(page.getPageNum()+1)})}">下一页 |</a>
+        <A th:href="@{'/show'(title=${title},pageIndex=${page.getPages()})}">末页</A>
+    </DIV>
+    <BR>
+    <UL class="list" th:each="stu,sta:${list}" >
+        <LI class="odd" th:class="${sta.odd}?'odd1'">
+            <H4>
+                <A th:href="@{'/xiang'(subId=${stu.subId},title=${stu.sub.subTitle},xuan=${stu.xuan},total=${stu.total})}" th:text="${stu.sub.subTitle}">哪个浏览器好用</A>
+                <em th:if="${opr eq 2}">
+                    <a th:href="@{'/xiugai'(subId=${stu.subId},title=${stu.sub.subTitle})}">维护</a>
+                    <a th:href="@{'/del'(subId=${stu.subId})}" onclick="return del()" >删除</a>
+                </em>
+            </H4>
+            <DIV class="join">
+                <A th:if="${opr eq 1}" th:href="@{'/voteBySubId'(subId=${stu.subId},title=${stu.sub.subTitle},xuan=${stu.xuan},total=${stu.total})}">我要参与</A>
+            </DIV>
+            <P class="info" th:text="'共有'+${stu.xuan}+'个选项,已有'+${stu.total}+'个投票。'">共有 1 个选项，已有 1 个投票。</P>
+        </LI>
+    </UL>
+    <DIV style="float: right;">
+        <A th:href="@{'/show'(title=${title},pageIndex=1)}">首页 |</A>
+        <a th:href="@{'/show'(title=${title},pageIndex=${page.getPageNum()-1<=1?1:page.getPageNum()-1})}">上一页 |</a>
+        <a th:href="@{'/show'(title=${title},pageIndex=${page.getPageNum()+1>=page.getPages()?page.getPages():(page.getPageNum()+1)})}">下一页 |</a>
+        <A th:href="@{'/show'(title=${title},pageIndex=${page.getPages()})}">末页</A>
+    </DIV>
+</DIV>
+<DIV class="wrap" id="footer"> 北大青鸟 © 版权所有</DIV>
+</BODY>
+<script type="text/javascript">
+
+   function del() {
+        if (confirm("确认是否删除!")){
+            return true;
+        }else {
+            return false;
+        }
+   }
+</script>
+</HTML>

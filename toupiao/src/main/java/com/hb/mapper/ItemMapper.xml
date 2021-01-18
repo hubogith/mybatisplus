@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hb.mapper.ItemMapper">
+
+    <!--主题列表  选项数   投票数  -->
+    <select id="show" resultMap="item1" parameterType="string">
+        SELECT s.`sub_id`,s.`sub_title`,COUNT(DISTINCT o.`option_id`) as xuan,COUNT(DISTINCT i.`item_id`) as total
+        FROM `sub` s LEFT JOIN `option` o ON s.`sub_id`=o.`sub_id`
+        LEFT JOIN `item` i ON s.`sub_id`=i.`sub_id`
+        <where>
+
+            <if test="title!=null and title!=''">
+                s.sub_title like concat('%',#{title},'%')
+            </if>
+        </where>
+        GROUP BY s.sub_id,s.`sub_title`
+    </select>
+
+    <resultMap id="item1" type="item">
+        <association property="user" javaType="user"/>
+        <association property="sub" javaType="sub"/>
+        <association property="option" javaType="option"/>
+    </resultMap>
+
+
+    <!--根据主题查出选项内容 跟相应票数-->
+    <select id="bySubId" resultMap="isMap">
+        SELECT o.`option_concat` as con,COUNT(i.`option_id`) as num,o.`option_order` as ord FROM `option` o
+        LEFT JOIN item i
+        ON o.`option_id`=i.`option_id`
+        WHERE	o.`sub_id`=#{subId}
+        GROUP BY o.`option_concat`
+        ORDER BY  o.`option_order`
+    </select>
+
+    <resultMap id="isMap" type="map">
+        <result column="con" property="con"/>
+        <result column="num" property="num"/>
+        <result column="ord" property="ord"/>
+    </resultMap>
+
+
+<!--    SELECT o.`option_id`,o.`option_concat`,s.`sub_type` FROM `option` o
+INNER JOIN sub s
+ON o.`sub_id`=s.`sub_id`
+WHERE o.`sub_id`=1
+ORDER BY o.`option_order`-->
+    
+    <select id="voteBySubId" resultMap="isMap2">
+        SELECT o.`option_id` as oid,o.`option_order` as ord,o.`option_concat` as ocon,s.`sub_type` as stype,s.`sub_title` as title FROM `option` o
+    INNER JOIN sub s
+    ON o.`sub_id`=s.`sub_id`
+    WHERE o.`sub_id`=#{subId}
+    ORDER BY o.`option_order`
+    </select>
+    <resultMap id="isMap2" type="map">
+        <result column="oid" property="oid"/>
+        <result column="ocon" property="ocon"/>
+        <result column="stype" property="stype"/>
+        <result column="title" property="title"/>
+        <result column="ord" property="ord"/>
+    </resultMap>
+
+    <insert id="addVote">
+        insert  into item(`user_id`,`sub_id`,`option_id`) values
+        <foreach collection="items" item="item" separator="," index="index">
+            (#{item.userId},#{item.subId},#{item.optionId})
+        </foreach>
+    </insert>
+
+    <select id="byUserIdSubId" parameterType="int" resultType="item">
+        SELECT * FROM item i
+        WHERE  i.`user_id`=#{userId} AND i.`sub_id`=#{subId}
+    </select>
+    <delete id="delSubId">
+        delete from item
+        where sub_id=#{subId}
+    </delete>
+</mapper>
